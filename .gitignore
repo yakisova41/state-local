@@ -5,3 +5,4 @@ npm-debug.log
 lib/
 dist/
 .history
+bun.lockb
