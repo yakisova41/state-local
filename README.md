@@ -71,8 +71,6 @@ function yetAnotherFn() {
 }
 ```
 
-[codesandbox](https://codesandbox.io/s/motivation-1-xv5el?file=/src/index.js)
-
 We also can track the changes in items:
 
 ```javascript
@@ -85,8 +83,6 @@ const [getState, setState, onUpdate] = state.create({ x: 0, y: 1 }, {
 
 // ...
 ```
-
-[codesandbox](https://codesandbox.io/s/motivation-2-ivf7d)
 
 We can use the subset of the state in some execution contexts:
 
@@ -103,8 +99,6 @@ function someFn() {
   console.log(state.y); // ❌ undefined - there is no y
 }
 ```
-
-[codesandbox](https://codesandbox.io/s/motivation-3-femne)
 
 And much more...
 
@@ -126,23 +120,11 @@ And much more...
 You can install this library as an npm package or download it from the CDN and use it in node or browser:
 
 ```bash
-npm install state-local
+npm install yakisova41/state-local
 ```
 or
 ```bash
-yarn add state-local
-```
-
-or
-
-```html
-<script src="https://unpkg.com/state-local/dist/state-local.js"></script>
-
-<script>
-// now it is available in `window` (window.state)
-const [getState, setState, onUpdate] = state.create({ x: 11, y: 13 });
-// ...
-</script>
+yarn add yakisova41/state-local
 ```
 
 #### create
@@ -157,8 +139,6 @@ import state from 'state-local';
 // ...
 ```
 
-[codesandbox](https://codesandbox.io/s/docs-create-t1cxe)
-
 `create` is a function with two parameters:
 
 1) [`initial state`](#initial-state) (**required**)
@@ -168,7 +148,9 @@ import state from 'state-local';
 
 `initial state` is a base structure and a value for the state. It should be a non-empty object
 
-```javascript
+You can specify the type of state.
+
+```typescript
 import state from 'state-local';
 
 /*
@@ -177,11 +159,12 @@ const [getState, setState] = state.create(5); // ❌ error - initial state shoul
 const [getState, setState] = state.create({}); // ❌ error - initial state shouldn\'t be an empty object
 */
 
-const [getState, setState, onUpdate] = state.create({ isLoading: false, payload: null }); // ✅
+const [getState, setState, onUpdate] = state.create<{
+  isLoading: boolean,
+  payload: null
+}>({ isLoading: false, payload: null }); // ✅
 // ...
 ```
-
-[codesandbox](https://codesandbox.io/s/docs-initial-state-22i3s)
 
 #### handler
 
@@ -206,8 +189,6 @@ setState({ x: 7, y: 11, z: 13 });
 // ...
 ```
 
-[codesandbox](https://codesandbox.io/s/handler-function-uevxj)
-
 if `handler` is an object
 ```javascript
 import state from 'state-local';
@@ -230,8 +211,6 @@ setState({ x: 7, y: 11, z: 13 });
 // ...
 ```
 
-[codesandbox](https://codesandbox.io/s/handler-object-8k0pt)
-
 #### getState
 
 `getState` is the first element of the pair returned by `create` function. It will return the current state or the subset of the current state depending on how it was called. It has an optional parameter `selector`
@@ -252,8 +231,6 @@ console.log(p1); // 509
 console.log(p2); // 521
 ```
 
-[codesandbox](https://codesandbox.io/s/getstate-zn3hj)
-
 #### selector
 
 `selector` is a function that is supposed to be passed (optional) as an argument to `getState`. It receives the current state and returns a subset of the state
@@ -270,8 +247,6 @@ function someFn() {
   console.log(state.p3); // ❌ undefined - there is no p3
 }
 ```
-
-[codesandbox](https://codesandbox.io/s/selector-vjmdu)
 
 #### setState
 
@@ -291,8 +266,6 @@ setState({ y: 1 }); // ✅ ok
 setState({ x: -11, y: 11 }); // ✅ ok
 ```
 
-[codesandbox](https://codesandbox.io/s/setstate-1-u4fq0)
-
 `setState` also can receive a function which will be called with the current state and it is supposed to return the change object
 
 ```javascript
@@ -306,7 +279,23 @@ setState(state => ({ x: state.x - 11, y: state.y + 11 })); // ✅ ok
 setState(state => ({ z: 'some value' })); // ❌ error - it seams you want to change a field in the state which is not specified in the "initial" state
 ```
 
-[codesandbox](https://codesandbox.io/s/smoosh-wildflower-nv9dg)
+
+### onUpdate
+
+`onUpdate` is the therd element of the pair returned by `create` function. It is registers a handler to be executed when state is set
+
+```javascript
+import state from 'state-local';
+
+const [getState, setState, onUpdate] = state.create({ x:0, y: 0 });
+
+onUpdate((newState) => {
+  console.log("state update!");
+  console.log(newState.x) // 11
+})
+
+setState({ x: 11 });
+```
 
 ## License
 
