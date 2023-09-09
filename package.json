@@ -7,16 +7,16 @@
   "unpkg": "lib/umd/state-local.min.js",
   "jsdelivr": "lib/umd/state-local.min.js",
   "types": "lib/types.d.ts",
-  "author": "Suren Atoyan <contact@surenatoyan.com>",
+  "author": "yakisova41",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/suren-atoyan/state-local"
+    "url": "git+https://github.com/yakisova41/state-local"
   },
   "bugs": {
-    "url": "https://github.com/suren-atoyan/state-local/issues"
+    "url": "https://github.com/yakisova41/state-local/issues"
   },
-  "homepage": "https://github.com/suren-atoyan/state-local#readme",
+  "homepage": "https://github.com/yakisova41/state-local#readme",
   "keywords": [
     "state",
     "state management",
