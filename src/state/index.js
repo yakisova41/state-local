@@ -1,5 +1,5 @@
-import { compose, curry, isFunction } from '../utils';
-import validators from '../validators';
+import { compose, curry, isFunction } from "../utils";
+import validators from "../validators";
 
 function create(initial, handler = {}) {
   validators.initial(initial);
@@ -12,21 +12,25 @@ function create(initial, handler = {}) {
   const validate = curry(validators.changes)(initial);
   const getChanges = curry(extractChanges)(state);
 
-  function getState(selector = state => state) {
+  function getState(selector = (state) => state) {
     validators.selector(selector);
     return selector(state.current);
   }
 
-  function setState(causedChanges) {
-    compose(
-      didUpdate,
-      update,
-      validate,
-      getChanges,
-    )(causedChanges);
+  const updateHandlers = [];
+
+  function onUpdate(handler) {
+    updateHandlers.push(handler);
   }
 
-  return [getState, setState];
+  function setState(causedChanges) {
+    compose(didUpdate, update, validate, getChanges)(causedChanges);
+    updateHandlers.forEach((handler) => {
+      handler(causedChanges);
+    });
+  }
+
+  return [getState, setState, onUpdate];
 }
 
 function extractChanges(state, causedChanges) {
@@ -44,8 +48,9 @@ function updateState(state, changes) {
 function didStateUpdate(state, handler, changes) {
   isFunction(handler)
     ? handler(state.current)
-    : Object.keys(changes)
-        .forEach(field => handler[field]?.(state.current[field]));
+    : Object.keys(changes).forEach((field) =>
+        handler[field]?.(state.current[field]),
+      );
 
   return changes;
 }

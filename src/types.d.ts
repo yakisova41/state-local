@@ -4,14 +4,15 @@
 
 export as namespace state;
 
-export type State = Record<string, unknown>;
-export type Selector = (state: State) => State;
-export type ChangeGetter = (state: State) => State;
-export type GetState = (selector?: Selector) => State;
-export type SetState = (change: State | ChangeGetter) => void;
-export type StateUpdateHandler = (update: State) => unknown;
-export type FieldUpdateHandler = (update: any) => unknown;
-export type Handlers = Record<string, FieldUpdateHandler>;
+export type State<T> = T;
+export type Selector<T> = (state: State<T>) => State<T>;
+export type ChangeGetter<T> = (state: State<T>) => State<T>;
+export type GetState<T> = (selector?: Selector<T>) => State<T>;
+export type SetState<T> = (change: State<T> | ChangeGetter<T>) => void;
+export type OnUpdate<T> = (handler: (change: State<T>) => any) => void;
+export type StateUpdateHandler<T> = (update: State<T>) => T;
+export type FieldUpdateHandler<T> = (update: any) => T;
+export type Handlers<T> = Record<string, FieldUpdateHandler<T>>;
 
 /**
  * `state.create` is a function with two parameters:
@@ -22,4 +23,7 @@ export type Handlers = Record<string, FieldUpdateHandler>;
  * and the all values of that object should be functions, plus they should be called immediately
  * after every update of the corresponding field in the state
  */
-export function create(initial: State, handler?: StateUpdateHandler | Handlers): [GetState, SetState];
+export function create<T>(
+  initial: State<T>,
+  handler?: StateUpdateHandler<T> | Handlers<T>,
+): [GetState<T>, SetState<T>, OnUpdate<T>];
