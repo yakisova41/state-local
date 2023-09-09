@@ -1,4 +1,5 @@
-# State &middot; [![monthly downloads](https://img.shields.io/npm/dm/state-local)](https://www.npmjs.com/package/state-local) [![gitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/suren-atoyan/state-local/blob/master/LICENSE) [![Rate on Openbase](https://badges.openbase.io/js/rating/state-local.svg)](https://openbase.io/js/state-local?utm_source=embedded&utm_medium=badge&utm_campaign=rate-badge) [![build size](https://img.shields.io/bundlephobia/minzip/state-local)](https://bundlephobia.com/result?p=state-local) [![npm version](https://img.shields.io/npm/v/state-local.svg?style=flat)](https://www.npmjs.com/package/state-local)  [![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/suren-atoyan/state-local/pulls)
+# State
+Added type specification and onUpdate function to [suren-atoyan/state-local](https://github.com/suren-atoyan/state-local)
 
 :zap: Tiny, simple, and robust technique for defining and acting with local states (for all js environments - node, browser, etc.)
 
@@ -77,7 +78,7 @@ We also can track the changes in items:
 ```javascript
 import state from 'state-local';
 
-const [getState, setState] = state.create({ x: 0, y: 1 }, {
+const [getState, setState, onUpdate] = state.create({ x: 0, y: 1 }, {
   x: latestX => console.log('(⌐▀ ̯ʖ▀) Houston we have a problem; "x" has been changed. "x" now is:', latestX),
   y: latestY => console.log('(⌐▀ ̯ʖ▀) Houston we have a problem; "y" has been changed. "y" now is:', latestY),
 });
@@ -92,7 +93,7 @@ We can use the subset of the state in some execution contexts:
 ```javascript
 import state from 'state-local';
 
-const [getState, setState] = state.create({ x: 5, y: 7 });
+const [getState, setState, onUpdate] = state.create({ x: 5, y: 7 });
 
 // ...
 function someFn() {
@@ -139,7 +140,7 @@ or
 
 <script>
 // now it is available in `window` (window.state)
-const [getState, setState] = state.create({ x: 11, y: 13 });
+const [getState, setState, onUpdate] = state.create({ x: 11, y: 13 });
 // ...
 </script>
 ```
@@ -176,7 +177,7 @@ const [getState, setState] = state.create(5); // ❌ error - initial state shoul
 const [getState, setState] = state.create({}); // ❌ error - initial state shouldn\'t be an empty object
 */
 
-const [getState, setState] = state.create({ isLoading: false, payload: null }); // ✅
+const [getState, setState, onUpdate] = state.create({ isLoading: false, payload: null }); // ✅
 // ...
 ```
 
@@ -195,7 +196,7 @@ if `handler` is a function
 ```javascript
 import state from 'state-local';
 
-const [getState, setState] = state.create({ x: 2, y: 3, z: 5 }, handleStateUpdate /* will be called immediately after every state update */);
+const [getState, setState, onUpdate] = state.create({ x: 2, y: 3, z: 5 }, handleStateUpdate /* will be called immediately after every state update */);
 
 function handleStateUpdate(latestState) {
   console.log('hey state has been updated; the new state is:', latestState); // { x: 7, y: 11, z: 13 }
@@ -238,7 +239,7 @@ setState({ x: 7, y: 11, z: 13 });
 ```javascript
 import state from "state-local";
 
-const [getState, setState] = state.create({ p1: 509, p2: 521 });
+const [getState, setState, onUpdate] = state.create({ p1: 509, p2: 521 });
 
 const state = getState();
 console.log(state.p1); // 509
@@ -260,7 +261,7 @@ console.log(p2); // 521
 ```javascript
 import state from 'state-local';
 
-const [getState, setState] = state.create({ p1: 389, p2: 397, p3: 401 });
+const [getState, setState, onUpdate] = state.create({ p1: 389, p2: 397, p3: 401 });
 
 function someFn() {
   const state = getState(({ p1, p2 }) => ({ p1, p2 }));
@@ -281,7 +282,7 @@ function someFn() {
 ```javascript
 import state from 'state-local';
 
-const [getState, setState] = state.create({ x:0, y: 0 });
+const [getState, setState, onUpdate] = state.create({ x:0, y: 0 });
 
 setState({ z: 'some value' }); // ❌ error - it seams you want to change a field in the state which is not specified in the "initial" state
 
@@ -297,7 +298,7 @@ setState({ x: -11, y: 11 }); // ✅ ok
 ```javascript
 import state from 'state-local';
 
-const [getState, setState] = state.create({ x:0, y: 0 });
+const [getState, setState, onUpdate] = state.create({ x:0, y: 0 });
 
 setState(state => ({ x: state.x + 2 })); // ✅ ok
 setState(state => ({ x: state.x - 11, y: state.y + 11 })); // ✅ ok
